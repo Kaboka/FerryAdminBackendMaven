@@ -25,7 +25,11 @@ import javax.ejb.LocalBean;
  * @author martin
  */
 @Stateless
-public class NewSessionBean implements AdminContract{
+public class FerryAdminManager implements AdminContract{
+
+    public FerryAdminManager() {
+      
+    }
 
     public void businessMethod() {
     }
