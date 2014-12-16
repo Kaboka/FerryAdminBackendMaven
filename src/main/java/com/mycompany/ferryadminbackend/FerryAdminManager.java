@@ -17,8 +17,13 @@ import ferry.eto.NoSuchScheduleException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
-import javax.ejb.Stateless;
 import javax.ejb.LocalBean;
+import javax.ejb.Stateless;
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
+import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 
 /**
  *
@@ -26,7 +31,10 @@ import javax.ejb.LocalBean;
  */
 @Stateless
 public class FerryAdminManager implements AdminContract{
-
+  //  @PersistenceContext(unitName = "TestPU")
+  //  private EntityManager manager;
+    
+    
     public FerryAdminManager() {
       
     }
@@ -44,8 +52,11 @@ public class FerryAdminManager implements AdminContract{
 
     @Override
     public Collection<FerryDetail> showFerries() throws DataAccessException {
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory("FerryAdminBackendPU");
+        EntityManager em = emf.createEntityManager();
+        Query query = em.createNamedQuery("Ferry.findAll");
         Collection<FerryDetail> ferries = new ArrayList<>();
-        ferries.add(new FerryDetail());
+        ferries.add(new FerryDetail(1,"test",null));
         return ferries;
     }
 
