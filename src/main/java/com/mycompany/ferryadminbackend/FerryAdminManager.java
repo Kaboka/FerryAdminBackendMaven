@@ -4,6 +4,7 @@
  */
 package com.mycompany.ferryadminbackend;
 
+import dk.cphbusiness.entities.Ferry;
 import ferry.contract.AdminContract;
 import ferry.dto.FerryDetail;
 import ferry.dto.FerryIdentifier;
@@ -17,6 +18,8 @@ import ferry.eto.NoSuchScheduleException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
+import java.util.List;
+import javax.ejb.EJB;
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -31,12 +34,16 @@ import javax.persistence.Query;
  */
 @Stateless
 public class FerryAdminManager implements AdminContract{
-  //  @PersistenceContext(unitName = "TestPU")
-  //  private EntityManager manager;
+ //   @PersistenceContext(name="FerryAdminBackendPU")
+    private EntityManager em;
     
+    
+    public void setEntityManager(EntityManager manager){
+        this.em = manager;
+    }
     
     public FerryAdminManager() {
-      
+    
     }
 
     public void businessMethod() {
@@ -52,12 +59,10 @@ public class FerryAdminManager implements AdminContract{
 
     @Override
     public Collection<FerryDetail> showFerries() throws DataAccessException {
-        EntityManagerFactory emf = Persistence.createEntityManagerFactory("FerryAdminBackendPU");
-        EntityManager em = emf.createEntityManager();
-        Query query = em.createNamedQuery("Ferry.findAll");
-        Collection<FerryDetail> ferries = new ArrayList<>();
-        ferries.add(new FerryDetail(1,"test",null));
-        return ferries;
+        List<Ferry> ferries = (List<Ferry>)em.createNamedQuery("Ferry.findAll").getResultList();
+        Collection<FerryDetail> ferries2 = new ArrayList<>();
+        ferries2.add(new FerryDetail(1,"test",null));
+        return ferries2;
     }
 
     @Override
