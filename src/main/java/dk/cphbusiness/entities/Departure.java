@@ -14,6 +14,8 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
@@ -28,7 +30,7 @@ import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
- * @author Kasper
+ * @author mhck
  */
 @Entity
 @Table(name = "DEPARTURE")
@@ -39,6 +41,8 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Departure.findByDepartureTime", query = "SELECT d FROM Departure d WHERE d.departureTime = :departureTime"),
     @NamedQuery(name = "Departure.findByDepartureDate", query = "SELECT d FROM Departure d WHERE d.departureDate = :departureDate")})
 public class Departure implements Serializable {
+    @ManyToMany(mappedBy = "departureCollection")
+    private Collection<Schedule> scheduleCollection;
     private static final long serialVersionUID = 1L;
     @Id
     @Basic(optional = false)
@@ -51,12 +55,26 @@ public class Departure implements Serializable {
     @Column(name = "DEPARTURE_DATE")
     @Temporal(TemporalType.DATE)
     private Date departureDate;
+    @JoinTable(name = "DEPARTURE_HAS_CONFIGS", joinColumns = {
+        @JoinColumn(name = "DEPARTURE_ID", referencedColumnName = "ID")}, inverseJoinColumns = {
+        @JoinColumn(name = "FERRY_CONFIG_ID", referencedColumnName = "ID")})
+    @ManyToMany
+    private Collection<FerryConfig> ferryConfigCollection;
     @JoinColumn(name = "ROUTE_ID", referencedColumnName = "ID")
     @ManyToOne
-    private Route routeId;
+    private Route route;
     @OneToMany(mappedBy = "departureId")
     private Collection<Reservation> reservationCollection;
 
+    public Departure(Integer id, String departureTime, Date departureDate, Collection<FerryConfig> ferryConfigCollection, Route route, Collection<Reservation> reservationCollection) {
+        this.id = id;
+        this.departureTime = departureTime;
+        this.departureDate = departureDate;
+        this.ferryConfigCollection = ferryConfigCollection;
+        this.route = route;
+        this.reservationCollection = reservationCollection;
+    }
+    
     public Departure() {
     }
 
@@ -88,12 +106,21 @@ public class Departure implements Serializable {
         this.departureDate = departureDate;
     }
 
-    public Route getRouteId() {
-        return routeId;
+    @XmlTransient
+    public Collection<FerryConfig> getFerryConfigCollection() {
+        return ferryConfigCollection;
     }
 
-    public void setRouteId(Route routeId) {
-        this.routeId = routeId;
+    public void setFerryConfigCollection(Collection<FerryConfig> ferryConfigCollection) {
+        this.ferryConfigCollection = ferryConfigCollection;
+    }
+
+    public Route getRoute() {
+        return route;
+    }
+
+    public void setRoute(Route route) {
+        this.route = route;
     }
 
     @XmlTransient
@@ -129,5 +156,4 @@ public class Departure implements Serializable {
     public String toString() {
         return "dk.cphbusiness.entities.Departure[ id=" + id + " ]";
     }
-    
 }

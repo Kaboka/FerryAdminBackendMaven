@@ -24,7 +24,7 @@ import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
- * @author Kasper
+ * @author mhck
  */
 @Entity
 @Table(name = "ROUTE")
@@ -53,6 +53,15 @@ public class Route implements Serializable {
     @OneToMany(mappedBy = "routeId")
     private Collection<Price> priceCollection;
 
+    public Route(Integer id, Integer duration, Harbour idOrigin, Harbour idDestination, Collection<Departure> departureCollection, Collection<Price> priceCollection) {
+        this.id = id;
+        this.duration = duration;
+        this.idOrigin = idOrigin;
+        this.idDestination = idDestination;
+        this.departureCollection = departureCollection;
+        this.priceCollection = priceCollection;
+    }
+    
     public Route() {
     }
 

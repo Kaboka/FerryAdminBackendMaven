@@ -7,21 +7,24 @@
 package dk.cphbusiness.entities;
 
 import java.io.Serializable;
+import java.util.Collection;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
- * @author Kasper
+ * @author mhck
  */
 @Entity
 @Table(name = "FERRY_CONFIG")
@@ -51,6 +54,8 @@ public class FerryConfig implements Serializable {
     @NotNull
     @Column(name = "WEIGHT_CAPACITY")
     private int weightCapacity;
+    @ManyToMany(mappedBy = "ferryConfigCollection")
+    private Collection<Departure> departureCollection;
     @JoinColumn(name = "FERRY_ID", referencedColumnName = "ID")
     @ManyToOne
     private Ferry ferryId;
@@ -99,6 +104,15 @@ public class FerryConfig implements Serializable {
 
     public void setWeightCapacity(int weightCapacity) {
         this.weightCapacity = weightCapacity;
+    }
+
+    @XmlTransient
+    public Collection<Departure> getDepartureCollection() {
+        return departureCollection;
+    }
+
+    public void setDepartureCollection(Collection<Departure> departureCollection) {
+        this.departureCollection = departureCollection;
     }
 
     public Ferry getFerryId() {

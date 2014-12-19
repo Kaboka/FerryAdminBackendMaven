@@ -24,7 +24,7 @@ import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
- * @author Kasper
+ * @author mhck
  */
 @Entity
 @Table(name = "HARBOUR")
@@ -46,11 +46,19 @@ public class Harbour implements Serializable {
     @ManyToMany(mappedBy = "harbourCollection")
     private Collection<Ferry> ferryCollection;
     @OneToMany(mappedBy = "idOrigin")
-    private Collection<Route> routeCollection;
+    private Collection<Route> originRouteCollection;
     @OneToMany(mappedBy = "idDestination")
-    private Collection<Route> routeCollection1;
+    private Collection<Route> destinationRouteCollection;
 
     public Harbour() {
+    }
+
+    public Harbour(Integer id, String name, Collection<Ferry> ferryCollection, Collection<Route> originRouteCollection, Collection<Route> destinationRouteCollection) {
+        this.id = id;
+        this.name = name;
+        this.ferryCollection = ferryCollection;
+        this.originRouteCollection = originRouteCollection;
+        this.destinationRouteCollection = destinationRouteCollection;
     }
 
     public Harbour(Integer id) {
@@ -84,20 +92,20 @@ public class Harbour implements Serializable {
 
     @XmlTransient
     public Collection<Route> getRouteCollection() {
-        return routeCollection;
+        return originRouteCollection;
     }
 
-    public void setRouteCollection(Collection<Route> routeCollection) {
-        this.routeCollection = routeCollection;
+    public void setOriginRouteCollection(Collection<Route> originRouteCollection) {
+        this.originRouteCollection = originRouteCollection;
     }
 
     @XmlTransient
-    public Collection<Route> getRouteCollection1() {
-        return routeCollection1;
+    public Collection<Route> getDestinationRouteCollection() {
+        return destinationRouteCollection;
     }
 
-    public void setRouteCollection1(Collection<Route> routeCollection1) {
-        this.routeCollection1 = routeCollection1;
+    public void setDestinationRouteCollection(Collection<Route> destinationRouteCollection) {
+        this.destinationRouteCollection = destinationRouteCollection;
     }
 
     @Override
